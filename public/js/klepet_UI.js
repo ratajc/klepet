@@ -27,6 +27,7 @@ function procesirajVnosUporabnika(klepetApp, socket) {
   var sporocilo = $('#poslji-sporocilo').val();
   sporocilo = trakHtml(sporocilo);
   sporocilo = dodajSmeske(sporocilo);
+  sporocilo = dodajYoutube(sporocilo);
   var sistemskoSporocilo;
 
   if (sporocilo.charAt(0) == '/') {
@@ -142,5 +143,18 @@ function dodajSmeske(vhodnoBesedilo) {
         "<img src='http://sandbox.lavbic.net/teaching/OIS/gradivo/" +
         preslikovalnaTabela[smesko] + "' />");
   }
+  return vhodnoBesedilo;
+}
+
+function dodajYoutube(vhodnoBesedilo) {
+  vhodnoBesedilo = vhodnoBesedilo.replace(/(?:\s|\"|^)(?:http|https):\/\/www.youtube.com\/watch\?v=[A-Za-z0-9_-]{11}/g, function(youtube) {
+    youtube = youtube.trim();
+    var id = youtube.substr(youtube.indexOf("watch?v=") + 8, 11);
+    if (youtube.charAt(0) == "\"")
+      return '"<iframe class="youtube" src="https://www.youtube.com/embed/' + id + '" allowfullscreen></iframe>';
+    else
+      return '<iframe class="youtube" src="https://www.youtube.com/embed/' + id + '" allowfullscreen></iframe>';
+  });
+  
   return vhodnoBesedilo;
 }
